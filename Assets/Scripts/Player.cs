@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Player : MonoBehaviour
 {
+    public GameController gameController;
 
     bool eat = false;
 
@@ -13,17 +14,24 @@ public class Player : MonoBehaviour
     public GameObject bodyPrefab;
 
     public static float moveDistance = 0.279f; // specific to the size of the snake blocks
-    Vector3 dir = Vector3.zero;
-    Vector3 right; bool righting = false;
-    Vector3 down; bool downing = false;
-    Vector3 left; bool lefting = false;
-    Vector3 up; bool uping = false;
+   
+    private enum Directions
+    {
+        right,
+        down,
+        left,
+        up,
+        stop
+    } Directions direction = Directions.stop;
+
+    bool righting = false;
+    bool downing = false;
+    bool lefting = false;
+    bool uping = false;
 
     public static List<Transform> tail = new List<Transform>();
 
     public float speed = 0.3f;
-
-
 
     //private float[] validXLocs = {2.511f, 2.232f, 1.953f, 1.674f, 1.395f, 1.116f, 0.837f, 0.558f, 0.279f, 0,
     //                                -2.511f, -2.232f, -1.953f, -1.674f, -1.395f, -1.116f, -0.837f, -0.558f, -0.279f};
@@ -35,8 +43,6 @@ public class Player : MonoBehaviour
 
     private int xCounter = 9;
     private int yCounter = 15;
-
-
 
     void Start()
     {
@@ -64,44 +70,36 @@ public class Player : MonoBehaviour
 
         transform.position = new Vector3(validXLocs[xCounter], validYLocs[yCounter]);
 
-        right = new Vector3(moveDistance, 0);
-        down = new Vector3(0, -moveDistance);
-        left = new Vector3(-moveDistance, 0);
-        up = new Vector3(0, moveDistance);
-
         InvokeRepeating("Move", 1, speed);   
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!dead)
         {
             if (Input.GetKey(KeyCode.RightArrow) && !lefting)
             {
-                dir = right;
-
+                direction = Directions.right;
             }
             else if (Input.GetKey(KeyCode.DownArrow) && !uping)
-            {
-                dir = down;
-
+            { 
+                direction = Directions.down;
             }
             else if (Input.GetKey(KeyCode.LeftArrow) && !righting)
             {
-                dir = left;
-
+                direction = Directions.left;
             }
             else if (Input.GetKey(KeyCode.UpArrow) && !downing)
             {
-                dir = up;
-
+                direction = Directions.up;
             }
             
 
         }
-        else
+        else // if (dead)
         {
+            gameController.ResetScore();
+
             foreach (Transform t in tail)
             {
                 Destroy(t.gameObject);
@@ -110,57 +108,41 @@ public class Player : MonoBehaviour
 
             Destroy(GameObject.FindGameObjectWithTag("Food"));
 
+            direction = Directions.stop;
             xCounter = 9;
             yCounter = 15;
             transform.position = new Vector3(validXLocs[xCounter], validYLocs[yCounter]);
-            dir = Vector2.zero;
 
             setDirBools();
             dead = false;
-            //if (Input.GetKey(KeyCode.R))
-            //{
-            //    foreach (Transform t in tail)
-            //    {
-            //        Destroy(t.gameObject);
-            //    }
-            //    tail.Clear();
-
-            //    xCounter = 9;
-            //    yCounter = 15;
-            //    transform.position = new Vector3(validXLocs[xCounter], validYLocs[yCounter]);
-            //    dir = Vector2.zero;
-
-            //    setDirBools();
-            //    dead = false;
-            //}
         }
         
     }
 
     private void setDirBools()
     {
-        if (dir == right)
+        if (direction == Directions.right)
         {
             righting = true;
             downing = false;
             lefting = false;
             uping = false;
         }
-        else if (dir == down)
+        else if (direction == Directions.down)
         {
             righting = false;
             downing = true;
             lefting = false;
             uping = false;
         }
-        else if (dir == left)
+        else if (direction == Directions.left)
         {
             righting = false;
             downing = false;
             lefting = true;
             uping = false;
         }
-        else if (dir == up)
+        else if (direction == Directions.up)
         {
             righting = false;
             downing = false;
@@ -182,28 +164,22 @@ public class Player : MonoBehaviour
         {
             // Save current position
             Vector2 pos = new Vector2(validXLocs[xCounter], validYLocs[yCounter]);
-            
-            
-            //transform.Translate(dir);
-            //transform.position += dir;
-            //if (transform.position.x > 2.6 || transform.position.x < -2.6 || transform.position.y > 3.5 || transform.position.y < -4.7)
-            //    dead = true;
 
             setDirBools();
 
-            if (dir == right)
+            if (direction == Directions.right)
             {
                 xCounter++;
             }
-            else if (dir == down)
+            else if (direction == Directions.down)
             {
                 yCounter--;
             }
-            else if (dir == left)
+            else if (direction == Directions.left)
             {
                 xCounter--;
             }
-            else if (dir == up)
+            else if (direction == Directions.up)
             {
                 yCounter++;
             }
@@ -225,6 +201,8 @@ public class Player : MonoBehaviour
                 tail.Insert(0, bodyPiece.transform);
 
                 eat = false;
+
+                gameController.AddScore();
             }
             else if (tail.Count > 0)
             {

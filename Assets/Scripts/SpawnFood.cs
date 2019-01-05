@@ -19,7 +19,6 @@ public class SpawnFood : MonoBehaviour
     private float[] validXLocs = new float[19];
     private float[] validYLocs = new float[30];
 
-    // Start is called before the first frame update
     void Start()
     {
         float minX = -2.511f;
@@ -42,7 +41,6 @@ public class SpawnFood : MonoBehaviour
         Spawn();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (fiq == null) // if has been destroyed in another script
@@ -51,9 +49,9 @@ public class SpawnFood : MonoBehaviour
         }
     }
 
-    private float[] getCoods()
+    private Vector2 getCoods()
     {
-        float[] coods = new float[2];
+        Vector2 coods = Vector2.zero;
 
         float x = Random.Range(-2.6f, 2.6f);
         float y = Random.Range(-4.7f, 3.5f);
@@ -89,18 +87,39 @@ public class SpawnFood : MonoBehaviour
         }
         y = validYLocs[locOfSmallestDifference];
 
-        coods[0] = x;
-        coods[1] = y;
-
+        coods = new Vector2(x, y);
 
         return coods;
-
     }
 
     private void Spawn()
     {
 
-        float[] coods = getCoods();
+        Vector2 coods = Vector2.zero;
+        bool onPlayer = false;
+        do
+        {
+            onPlayer = false;
+
+            coods = getCoods();
+
+            foreach (Transform t in Player.tail)
+            {
+                // check to see if coods were placed on tail
+                if (Vector2.Distance(t.position, coods) < Player.moveDistance)
+                {
+                    onPlayer = true;
+                    Debug.Log("Happened on body");
+                    break;
+                }
+            }
+            // check to see if coods were placed on head
+            if (Vector2.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, coods) < Player.moveDistance)
+            {
+                onPlayer = true;
+                Debug.Log("Happened on head");
+            }
+        } while (onPlayer);
 
         loc = new Vector3(coods[0], coods[1], 0);
         
