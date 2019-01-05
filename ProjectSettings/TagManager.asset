@@ -43,3 +43,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 324024031
+    locked: 0
+  - name: Border
+    uniqueID: 2866345331
+    locked: 0
+  - name: Food
+    uniqueID: 2701920039
+    locked: 0
+  - name: Player
+    uniqueID: 3722070347
+    locked: 0
