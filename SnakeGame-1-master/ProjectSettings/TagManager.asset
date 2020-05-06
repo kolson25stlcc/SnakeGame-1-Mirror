@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Food
+  - Body
+  - FoodSpawner
+  - Difficulty
+  - ControlType
+  - Dimmer
+  - PauseText
+  - GameCanvas
+  - tongue
+  - eyes
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 324024031
+    locked: 0
+  - name: Border
+    uniqueID: 2866345331
+    locked: 0
+  - name: Food
+    uniqueID: 2701920039
+    locked: 0
+  - name: Player
+    uniqueID: 3722070347
+    locked: 0
+  - name: Dimmer
+    uniqueID: 2160572715
+    locked: 0
+  - name: VeryFront
+    uniqueID: 3724599275
+    locked: 0
